@@ -1,0 +1,14 @@
+version: "3.7"
+services:
+  jan:
+    container_name: jan
+    build: .
+    image: phpeter-pi/jan:local
+    volumes:
+      - ./src/index.php:/app/index.php
+      - ./src/functions.php.inc:/app/functions.php.inc
+      - ./src/search_jan:/usr/local/bin/search_jan
+      - ./data:/data
+    env_file: ./ENVFILE.env
+    ports:
+      - "8888:8080"

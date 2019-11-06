@@ -1,0 +1,7 @@
+version: "3.7"
+services:
+  jan:
+    container_name: jan
+    build: https://github.com/PHPeter-Pi/JAN.git
+    image: phpeter-pi/jan:local
+    env_file: ./ENVFILE.env
