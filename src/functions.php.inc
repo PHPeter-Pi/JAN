@@ -124,7 +124,7 @@ function getHttpHeaderRapidAPI()
 function getInfoJANCode($jan_code): string
 {
     $cache = getInfoJANCodeCache($jan_code);
-    if ($cache !== false) {
+    if ($cache !== false && ! empty(trim($cache))) {
         return $cache;
     }
 
