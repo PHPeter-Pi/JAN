@@ -8,7 +8,6 @@ services:
       - ./src/index.php:/app/index.php
       - ./src/functions.php.inc:/app/functions.php.inc
       - ./src/search_jan:/usr/local/bin/search_jan
-      - ./data:/data
     env_file: ./ENVFILE.env
     ports:
       - "8888:8080"

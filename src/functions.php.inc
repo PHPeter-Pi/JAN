@@ -27,14 +27,6 @@ function echoFaviconAndExit()
     exit(STATUS_SUCCESS);
 }
 
-function getFaviconImage()
-{
-    $base64_favicon_compressed = BASE64_FAVICON;
-    $bin_compress = base64_decode($base64_favicon_compressed);
-
-    return gzdecode($bin_compress);
-}
-
 function echoJsonAndExit(
     string $json_string,
     int    $status=STATUS_SUCCESS,
@@ -89,6 +81,14 @@ function getAPIKeyRapidAPI()
     }
 
     return $api_key;
+}
+
+function getFaviconImage()
+{
+    $base64_favicon_compressed = BASE64_FAVICON;
+    $bin_compress = base64_decode($base64_favicon_compressed);
+
+    return gzdecode($bin_compress);
 }
 
 function getHostRapidAPI()
@@ -153,6 +153,12 @@ function getJANCode()
 {
     $input = (isCLI()) ? getJANCodeFromCLI() : getJANCodeFromURL();
     $input = isRequestSample($input) ? getJANCodeSample() : $input;
+
+    // Healthcheck 用のレスポンス
+    if ($input === 'ping') {
+        echo 'pong';
+        exit(0);
+    }
 
     if (! isJANCodeValid($input)) {
         echoErrorAndExit('Invalid JAN Code.');
@@ -286,7 +292,13 @@ function putInfoJANCodeCache($jan_code, $str_json)
 
     $path_file_cache = getPathFileCache($jan_code);
 
-    return file_put_contents($path_file_cache, $str_json, LOCK_EX);
+    try {
+        $result = @file_put_contents($path_file_cache, $str_json, LOCK_EX);
+    } catch (Exception $e) {
+        echoErrorAndExit('File Write:' . $e->getMessage());
+    }
+
+    return $result;
 }
 
 function requestCurl($curl_options)
